@@ -4,6 +4,7 @@
 /*
 Kolumny - PB0 do PB3
 Wiersze - PC0 do PC3
+Wiersze PULL-DOWN 1k
 */
 
 uint8_t var = 0;
@@ -15,23 +16,52 @@ void setup() {
   Serial.begin(9600);
 
   PIN_SETUP();
-  PORTB |= 0b1000;
+  PORTC |= 0b0000;
 }
 
 void loop() {
-  var = PINC;
-  Serial.println(var, BIN);
-
-  delay(100);
-
+  for(uint8_t i = 0; i < 4; i++){
+    PORTC = (1 << i);
+    if(PINB == 1){ 
+      Serial.print("PINB: ");
+      Serial.print(PINB, BIN);
+      Serial.print("   i: ");
+      Serial.println(i); 
+      delay(250); 
+    }
+    else if(PINB == 2){ 
+      Serial.print("PINB: ");
+      Serial.print(PINB);
+      Serial.print("   i: ");
+      Serial.println(i + 5); 
+      while(PINB == 2){}
+      delay(20); 
+    }
+    else if(PINB == 4){ 
+      Serial.print("PINB: ");
+      Serial.print(PINB);
+      Serial.print("   i: ");
+      Serial.println(i + 9); 
+      while(PINB == 4){}
+      delay(20); 
+    }
+    else if(PINB == 8){ 
+      Serial.print("PINB: ");
+      Serial.print(PINB);
+      Serial.print("   i: ");
+      Serial.println(i + 13); 
+      while(PINB == 8){}
+      delay(20); 
+    }
+  }
 }
 
 void PIN_SETUP(void){
   //COLUMNS
-  DDRB = 0xFF;
-  PORTB = 0;
+  DDRC = 0xFF;
+  PORTC = 0x00;
 
   //ROWS
-  DDRC = 0x00;
-  PORTC = 0xFF;
+  DDRB = 0x00;
+  PORTB = 0x00;
 }
